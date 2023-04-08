@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol AlertButtonOptionsoble {
+public protocol AlertButtonOptionsoble {
     
     var buttonsCount: Int { get }
     var buttonsText : Array<String> { get set }
