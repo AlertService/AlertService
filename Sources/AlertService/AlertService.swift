@@ -39,7 +39,7 @@ final public class AlertService {
         self.actions.append(UIAlertAction(title: "Ok", style: .default, handler: { (alert) in
             completion()
         }))
-        topVC?.present(self.alert, animated: true)
+        present()
     }
     
     //MARK: -  Warning
@@ -47,7 +47,7 @@ final public class AlertService {
         self.title   = title
         self.message = message
         self.style   = style
-        topVC?.present(self.alert, animated: true)
+        present()
     }
     
     //MARK: - Text field
@@ -61,7 +61,7 @@ final public class AlertService {
             guard let self = self else { return }
             completion(self.alert.textFields?.first?.text)
         }))
-        topVC?.present(self.alert, animated: true)
+        present()
     }
     
     //MARK: - Options
@@ -80,8 +80,22 @@ final public class AlertService {
             })
             self.actions.append(action)
         }
+       present()
+    }
+    
+    private func present(){
+        guard !isAlertPresent() else { return }
         topVC?.present(self.alert, animated: true)
     }
+    
+    private func isAlertPresent() -> Bool {
+        guard let topVC = topVC else { return false }
+        let alertController = String(describing: Mirror(reflecting: alert).subjectType)
+        let topController   = String(describing: Mirror(reflecting: topVC).subjectType)
+        let isEqual         = topController.contains(alertController)
+        return isEqual
+    }
+    
     public init(){}
 }
 
