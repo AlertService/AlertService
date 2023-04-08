@@ -32,6 +32,7 @@ final public class AlertService {
     
     //MARK: - Default
     public func `default`(title: String, message: String, style: UIAlertController.Style = .alert, completion: @escaping () -> () = {}){
+        guard !isAlertPresent() else { return }
         self.title   = title
         self.message = message
         self.style   = style
@@ -44,6 +45,7 @@ final public class AlertService {
     
     //MARK: -  Warning
     public func warning(title: String, message: String, style: UIAlertController.Style = .alert){
+        guard !isAlertPresent() else { return }
         self.title   = title
         self.message = message
         self.style   = style
@@ -52,6 +54,7 @@ final public class AlertService {
     
     //MARK: - Text field
     public func field(title: String, message: String, style: UIAlertController.Style = .alert, completion: @escaping ((String?) -> ()) = {_ in }){
+        guard !isAlertPresent() else { return }
         self.title   = title
         self.message = message
         self.style   = style
@@ -66,6 +69,7 @@ final public class AlertService {
     
     //MARK: - Options
     public func options(title: String, message: String, options: AlertButtonOptions.Types, style: UIAlertController.Style = .alert, completion: @escaping ((Int) -> ()) = {_ in }){
+        guard !isAlertPresent() else { return }
         self.title   = title
         self.message = message
         self.style   = style
