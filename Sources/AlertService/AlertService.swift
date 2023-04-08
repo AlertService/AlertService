@@ -90,7 +90,7 @@ final public class AlertService {
     private func isAlertPresent() -> Bool {
         guard let topVC = topVC else { return false }
         let isAlertController = topVC is UIAlertController
-        return !isAlertController
+        return isAlertController
     }
     
     private func createAlert() -> UIAlertController {
