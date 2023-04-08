@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class AlertService {
+final public class AlertService {
     
     public let buttonOptions = AlertButtonOptions()
     
@@ -16,13 +16,14 @@ final class AlertService {
     }
     
     private var title   = ""
+    private var style   : UIAlertController.Style = .alert
     private var message = ""
     private var actions = [UIAlertAction]()
     
     private lazy var alert: UIAlertController = {
         let alert = UIAlertController(title  : self.title,
                                       message: self.message,
-                                      preferredStyle: .alert)
+                                      preferredStyle: self.style)
         self.actions.forEach { action in
             alert.addAction(action)
         }
@@ -30,9 +31,10 @@ final class AlertService {
     }()
     
     //MARK: - Default
-    public func `default`(title: String, message: String, completion: @escaping () -> () = {}){
+    public func `default`(title: String, message: String, style: UIAlertController.Style = .alert, completion: @escaping () -> () = {}){
         self.title   = title
         self.message = message
+        self.style   = style
         self.actions.removeAll()
         self.actions.append(UIAlertAction(title: "Ok", style: .default, handler: { (alert) in
             completion()
@@ -44,13 +46,15 @@ final class AlertService {
     public func warning(title: String, message: String){
         self.title   = title
         self.message = message
+        self.style   = style
         topVC?.present(self.alert, animated: true)
     }
     
     //MARK: - Text field
-    public func field(title: String, message: String, completion: @escaping ((String?) -> ()) = {_ in }){
+    public func field(title: String, message: String, style: UIAlertController.Style = .alert, completion: @escaping ((String?) -> ()) = {_ in }){
         self.title   = title
         self.message = message
+        self.style   = style
         alert.addTextField(configurationHandler: nil)
         self.actions.removeAll()
         self.actions.append(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] (alert) in
@@ -61,9 +65,10 @@ final class AlertService {
     }
     
     //MARK: - Options
-    public func options(title: String, message: String, options: AlertButtonOptions.Types, completion: @escaping ((Int) -> ()) = {_ in }){
+    public func options(title: String, message: String, options: AlertButtonOptions.Types, style: UIAlertController.Style = .alert, completion: @escaping ((Int) -> ()) = {_ in }){
         self.title   = title
         self.message = message
+        self.style   = style
         self.actions.removeAll()
         let options: AlertButtonOptionsoble = buttonOptions.change(type: options)
         for button in 0..<options.buttonsCount {
