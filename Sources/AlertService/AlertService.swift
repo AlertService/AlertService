@@ -20,7 +20,7 @@ final public class AlertService {
     private var message = ""
     private var actions = [UIAlertAction]()
     
-    private lazy var alert: UIAlertController = {
+    private func createAlert() -> UIAlertController {
         let alert = UIAlertController(title  : self.title,
                                       message: self.message,
                                       preferredStyle: self.style)
@@ -28,7 +28,7 @@ final public class AlertService {
             alert.addAction(action)
         }
         return alert
-    }()
+    }
     
     //MARK: - Default
     public func `default`(title: String, message: String, style: UIAlertController.Style = .alert, completion: @escaping () -> () = {}){
@@ -36,11 +36,12 @@ final public class AlertService {
         self.title   = title
         self.message = message
         self.style   = style
+        let alert    = createAlert()
         self.actions.removeAll()
         self.actions.append(UIAlertAction(title: "Ok", style: .default, handler: { (alert) in
             completion()
         }))
-        present()
+        present(with: alert)
     }
     
     //MARK: -  Warning
@@ -49,27 +50,29 @@ final public class AlertService {
         self.title   = title
         self.message = message
         self.style   = style
-        present()
+        let alert    = createAlert()
+        present(with: alert)
     }
     
     //MARK: - Text field
     public func field(title: String, message: String, style: UIAlertController.Style = .alert, completion: @escaping ((String?) -> ()) = {_ in }){
         guard !isAlertPresent() else { return }
+        let alert = createAlert()
         self.title   = title
         self.message = message
         self.style   = style
         alert.addTextField(configurationHandler: nil)
         self.actions.removeAll()
-        self.actions.append(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] (alert) in
-            guard let self = self else { return }
-            completion(self.alert.textFields?.first?.text)
+        self.actions.append(UIAlertAction(title: "Ok", style: .default, handler: { (_) in
+            completion(alert.textFields?.first?.text)
         }))
-        present()
+        present(with: alert)
     }
     
     //MARK: - Options
     public func options(title: String, message: String, options: AlertButtonOptions.Types, style: UIAlertController.Style = .alert, completion: @escaping ((Int) -> ()) = {_ in }){
         guard !isAlertPresent() else { return }
+        let alert = createAlert()
         self.title   = title
         self.message = message
         self.style   = style
@@ -84,20 +87,18 @@ final public class AlertService {
             })
             self.actions.append(action)
         }
-       present()
+        present(with: alert)
     }
     
-    private func present(){
+    private func present(with alert: UIAlertController){
         guard !isAlertPresent() else { return }
-        topVC?.present(self.alert, animated: true)
+        topVC?.present(alert, animated: true)
     }
     
     private func isAlertPresent() -> Bool {
         guard let topVC = topVC else { return false }
-        let alertController = String(describing: Mirror(reflecting: alert).subjectType)
-        let topController   = String(describing: Mirror(reflecting: topVC).subjectType)
-        let isEqual         = topController.contains(alertController)
-        return isEqual
+        let isAlertController = topVC is UIAlertController
+        return !isAlertController
     }
     
     public init(){}
