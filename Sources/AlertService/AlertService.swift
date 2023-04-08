@@ -43,7 +43,7 @@ final public class AlertService {
     }
     
     //MARK: -  Warning
-    public func warning(title: String, message: String){
+    public func warning(title: String, message: String, style: UIAlertController.Style = .alert){
         self.title   = title
         self.message = message
         self.style   = style
