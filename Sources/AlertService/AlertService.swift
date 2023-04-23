@@ -9,8 +9,6 @@ import UIKit
 
 final public class AlertService {
     
-    public let buttonOptions = AlertButtonOptions()
-    
     private var topVC: UIViewController? {
         UIApplication.shared.windows.first?.visibleViewController()
     }
@@ -62,13 +60,12 @@ final public class AlertService {
     }
     
     //MARK: - Options
-    public func options(title: String, message: String, options: AlertButtonOptions.Types, style: UIAlertController.Style = .alert, completion: @escaping ((Int) -> ()) = {_ in }){
+    public func options(title: String, message: String, options: AlertButtonOptionsoble, style: UIAlertController.Style = .alert, completion: @escaping ((Int) -> ()) = {_ in }){
         guard !isAlertPresent() else { return }
         self.title   = title
         self.message = message
         self.style   = style
         self.actions.removeAll()
-        let options: AlertButtonOptionsoble = buttonOptions.change(type: options)
         for button in 0..<options.buttonsCount {
             let action = UIAlertAction(
                 title: options.buttonsText[button],
